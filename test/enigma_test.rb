@@ -101,6 +101,12 @@ class EnigmaTest < Minitest::Test
 
   def test_crack_module
     assert_equal "THIS MODULE WORKS!", @enigma.cracktest
-  end 
+  end
+
+  def test_it_finds_correct_date_rotation
+    @enigma.decrypt("abcde", key: "00000", date: "101183")
+
+    assert_equal [4, 8, 9, 9], @enigma.find_date_rotation
+  end
 
 end
