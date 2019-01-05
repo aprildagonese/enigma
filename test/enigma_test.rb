@@ -60,8 +60,11 @@ class EnigmaTest < Minitest::Test
   def test_it_calculates_shift
     enigma1 = Enigma.new
     enigma1.encrypt("whatever", key: "01234", date: "101183")
+    enigma2 = Enigma.new
+    enigma2.encrypt("whatever", key: "90037", date: "130385")
 
     assert_equal [10, 16, 31, 43], enigma1.calculate_shift
+    assert_equal [98, 2, 5, 42], enigma2.calculate_shift
   end
 
   def test_it_encodes_message
@@ -78,14 +81,17 @@ class EnigmaTest < Minitest::Test
                   :key => "88888",
                   :date => "101183"
                 }
-    assert_equal expected, enigma1.encrypt("lspiuftg", key: "88888", date: "101183")
+    assert_equal expected, enigma1.decrypt("lspiuftg", key: "88888", date: "101183")
   end
 
   def test_it_decodes_cyphertext
     enigma1 = Enigma.new
-    enigma1.decrypt("lspiuftg", key: "88888", date: "101183")
+    enigma1.decrypt("krgt", key: "01234", date: "101183")
+    enigma2 = Enigma.new
+    enigma2.decrypt("lspiuftg", key: "88888", date: "101183")
 
-    assert_equal "whatever", enigma1.decode_cyphertext("lspiuftg")
+    assert_equal "abcd", enigma1.decode_ciphertext("krgt")
+    assert_equal "whatever", enigma2.decode_ciphertext("lspiuftg")
   end
 
 end

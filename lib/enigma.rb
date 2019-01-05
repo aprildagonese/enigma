@@ -42,9 +42,9 @@ class Enigma
   def decrypt(ciphertext, key: nil, date: nil)
     @dateid_object = DateID.new(date)
     create_key_object(key)
-    decryption = { :decryption => "whatever", #decode_ciphertext
-                  :key => @key_object.key_string,
-                  :date => @dateid_object.date_string }
+    decryption = { :decryption => decode_ciphertext(ciphertext),
+                   :key => @key_object.key_string,
+                   :date => @dateid_object.date_string }
   end
 
   def create_key_object(key)
@@ -72,6 +72,7 @@ class Enigma
         new_index = 27 - difference.abs
       end
       new_chars << alphabet[new_index]
+      @shift = @shift.rotate
     end
     new_chars.join
   end
