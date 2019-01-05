@@ -4,8 +4,12 @@ require './lib/date'
 class Key
   attr_reader :key_string
 
-  def initialize(key = generate_random_key)
-    @key_string = key.to_s
+  def initialize(key = nil)
+    if key == nil
+      @key_string = generate_random_key
+    else
+      @key_string = key
+    end
   end
 
   def generate_random_key
@@ -16,8 +20,8 @@ class Key
     random_key.rjust(5, "0")
   end
 
-  def split_key_into_shifts
-    shift_hash = {  :A => @key_string[0] + @key_string[1],
+  def key_shifts
+    key_shifts = {  :A => @key_string[0] + @key_string[1],
                     :B => @key_string[1] + @key_string[2],
                     :C => @key_string[2] + @key_string[3],
                     :D => @key_string[3] + @key_string[4] }
