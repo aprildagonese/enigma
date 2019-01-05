@@ -3,6 +3,10 @@ require './lib/date'
 
 class Enigma
 
+  #decrypt
+  #CLI
+  #cracking
+
   def initialize
   end
 
@@ -35,10 +39,41 @@ class Enigma
     new_chars.join
   end
 
-  # def decrypt(ciphertext, key, date)
-  #   :decryption
-  #   :key
-  #   :date
-  # end
+  def decrypt(ciphertext, key: nil, date: nil)
+    @dateid_object = DateID.new(date)
+    create_key_object(key)
+    decryption = { :decryption => "whatever", #decode_ciphertext
+                  :key => @key_object.key_string,
+                  :date => @dateid_object.date_string }
+  end
+
+  def create_key_object(key)
+    if key == nil
+      calculate_key
+    else
+      @key_object = Key.new(key)
+    end
+  end
+
+  def calculate_key
+    #MATH STUFF
+    @key_object = Key.new(decrypted_key)
+  end
+
+  def decode_ciphertext(ciphertext)
+    calculate_shift
+    alphabet = (("a".."z").to_a << " ").unshift("NOPE")
+    new_chars = []
+    ciphertext.downcase.split("").each do |char|
+      difference = alphabet.find_index(char) - (@shift[0] % 27)
+      if difference > 0
+        new_index = difference
+      else
+        new_index = 27 - difference.abs
+      end
+      new_chars << alphabet[new_index]
+    end
+    new_chars.join
+  end
 
 end

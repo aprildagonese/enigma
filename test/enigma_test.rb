@@ -41,8 +41,8 @@ class EnigmaTest < Minitest::Test
     encryption1 = enigma1.encrypt("whatever", key: "12345")
     encryption2 = enigma1.encrypt("whatever", key: "67890")
 
-    assert_equal "040119", encryption1[:date]
-    assert_equal "040119", encryption2[:date]
+    assert_equal "050119", encryption1[:date]
+    assert_equal "050119", encryption2[:date]
   end
 
   def test_encryption_no_key_or_date_given
@@ -51,9 +51,9 @@ class EnigmaTest < Minitest::Test
     encryption2 = enigma1.encrypt("whatever")
 
     assert_equal 5, encryption1[:key].length
-    assert_equal "040119", encryption1[:date]
+    assert_equal "050119", encryption1[:date]
     assert_equal 5, encryption2[:key].length
-    assert_equal "040119", encryption2[:date]
+    assert_equal "050119", encryption2[:date]
     assert_equal false, encryption1[:key] == encryption2[:key]
   end
 
@@ -70,6 +70,22 @@ class EnigmaTest < Minitest::Test
     enigma1.calculate_shift
 
     assert_equal "krgt", enigma1.encode_message("ABCD")
+  end
+
+  def test_decryption_key_and_date_given
+    enigma1 = Enigma.new
+    expected =  { :decryption => "whatever",
+                  :key => "88888",
+                  :date => "101183"
+                }
+    assert_equal expected, enigma1.encrypt("lspiuftg", key: "88888", date: "101183")
+  end
+
+  def test_it_decodes_cyphertext
+    enigma1 = Enigma.new
+    enigma1.decrypt("lspiuftg", key: "88888", date: "101183")
+
+    assert_equal "whatever", enigma1.decode_cyphertext("lspiuftg")
   end
 
 end
