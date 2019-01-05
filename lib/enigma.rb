@@ -1,13 +1,15 @@
 require './lib/key'
 require './lib/date'
+require './lib/crack'
 
 class Enigma
-
+  include Crack
   #decrypt
   #CLI
   #cracking
 
   def initialize
+    @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
   end
 
   def encrypt(message, key: nil, date: nil)
@@ -29,11 +31,10 @@ class Enigma
   end
 
   def encode_message(message)
-    alphabet = (("a".."z").to_a << " ").unshift("NOPE")
     new_chars = []
     message.downcase.split("").each do |char|
-      new_index = (alphabet.find_index(char) + @shift[0]) % 27
-      new_chars << alphabet[new_index]
+      new_index = (@alphabet.find_index(char) + @shift[0]) % 27
+      new_chars << @alphabet[new_index]
       @shift = @shift.rotate
     end
     new_chars.join
@@ -41,6 +42,7 @@ class Enigma
 
   def decrypt(ciphertext, key: nil, date: nil)
     @dateid_object = DateID.new(date)
+    @ciphertext = ciphertext
     create_key_object(key)
     decryption = { :decryption => decode_ciphertext(ciphertext),
                    :key => @key_object.key_string,
@@ -49,29 +51,23 @@ class Enigma
 
   def create_key_object(key)
     if key == nil
-      calculate_key
+      @key_object = Key.new(calculate_key)
     else
       @key_object = Key.new(key)
     end
   end
 
-  def calculate_key
-    #MATH STUFF
-    @key_object = Key.new(decrypted_key)
-  end
-
   def decode_ciphertext(ciphertext)
     calculate_shift
-    alphabet = (("a".."z").to_a << " ").unshift("NOPE")
     new_chars = []
     ciphertext.downcase.split("").each do |char|
-      difference = alphabet.find_index(char) - (@shift[0] % 27)
+      difference = @alphabet.find_index(char) - (@shift[0] % 27)
       if difference > 0
         new_index = difference
       else
         new_index = 27 - difference.abs
       end
-      new_chars << alphabet[new_index]
+      new_chars << @alphabet[new_index]
       @shift = @shift.rotate
     end
     new_chars.join

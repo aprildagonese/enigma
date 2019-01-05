@@ -19,8 +19,7 @@ class EnigmaTest < Minitest::Test
     enigma1 = Enigma.new
     expected =  { :encryption => "lspiuftg",
                   :key => "88888",
-                  :date => "101183"
-                }
+                  :date => "101183" }
     assert_equal expected, enigma1.encrypt("whatever", key: "88888", date: "101183")
   end
 
@@ -75,15 +74,6 @@ class EnigmaTest < Minitest::Test
     assert_equal "krgt", enigma1.encode_message("ABCD")
   end
 
-  def test_decryption_key_and_date_given
-    enigma1 = Enigma.new
-    expected =  { :decryption => "whatever",
-                  :key => "88888",
-                  :date => "101183"
-                }
-    assert_equal expected, enigma1.decrypt("lspiuftg", key: "88888", date: "101183")
-  end
-
   def test_it_decodes_cyphertext
     enigma1 = Enigma.new
     enigma1.decrypt("krgt", key: "01234", date: "101183")
@@ -93,5 +83,24 @@ class EnigmaTest < Minitest::Test
     assert_equal "abcd", enigma1.decode_ciphertext("krgt")
     assert_equal "whatever", enigma2.decode_ciphertext("lspiuftg")
   end
+
+  def test_decryption_key_and_date_given
+    enigma1 = Enigma.new
+    expected =  { :decryption => "whatever",
+                  :key => "88888",
+                  :date => "101183" }
+    assert_equal expected, enigma1.decrypt("lspiuftg", key: "88888", date: "101183")
+  end
+
+  def test_decryption_no_date_given
+    expected =  { :decryption => "whatever",
+                  :key => "88888",
+                  :date => "050119" }
+    assert_equal expected, @enigma.decrypt("gpnapcrz", key: "88888")
+  end
+
+  def test_crack_module
+    assert_equal "THIS MODULE WORKS!", @enigma.cracktest
+  end 
 
 end
