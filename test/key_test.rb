@@ -36,4 +36,5 @@ class KeyTest < Minitest::Test
                  :D => "34" }
     assert_equal expected, @key.key_shifts
   end
+
 end
