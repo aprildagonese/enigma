@@ -16,13 +16,13 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_initializes_with_alphabet
-    expected = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]
+    expected = ["NOPE", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]
     assert_equal expected, @enigma.alphabet
   end
 
   def test_encryption_key_and_date_given
     enigma1 = Enigma.new
-    expected =  { :encryption => "placeholder",
+    expected =  { :encryption => "lspiuftg",
                   :key => "88888",
                   :date => "101183"
                 }
@@ -69,22 +69,12 @@ class EnigmaTest < Minitest::Test
     assert_equal [10, 16, 31, 43], enigma1.calculate_shift
   end
 
+  def test_it_encodes_message
+    enigma1 = Enigma.new
+    enigma1.encrypt("abcd", key: "01234", date: "101183")
+    enigma1.calculate_shift
 
-
-
-  def test_it_decrypts_with_key_and_date_given
-  end
-
-  def test_it_decrypts_with_no_key_given
-  end
-
-  def test_it_decrypts_with_no_date_given
-  end
-
-  def test_it_decrypts_with_no_key_or_date_given
-  end
-
-  def test_it_loads_files
+    assert_equal "krgt", enigma1.encode_message("abcd")
   end
 
 end
