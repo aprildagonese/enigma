@@ -29,11 +29,11 @@ class KeyTest < Minitest::Test
     assert_equal false, key_a == key_b
   end
 
-  def test_it_splits_key_into_shifts
+  def test_it_splits_key_into_keys
     expected = { :A => "01",
                  :B => "12",
                  :C => "23",
                  :D => "34" }
-    assert_equal expected, @key.split_key_into_shifts
+    assert_equal expected, @key.key_shifts
   end
 end
