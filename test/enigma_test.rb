@@ -62,8 +62,13 @@ class EnigmaTest < Minitest::Test
     assert_equal false, encryption1[:key] == encryption2[:key]
   end
 
-  def test_it_calculates_total_shift
-    
+  def test_it_calculates_shift
+    enigma1 = Enigma.new
+    enigma1.encrypt("whatever", key: "01234", date: "101183")
+
+    assert_equal [10, 16, 31, 43], enigma1.calculate_shift
+  end
+
 
 
 

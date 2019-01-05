@@ -22,9 +22,12 @@ class Enigma
   end
 
   def calculate_shift
-    key_shifts = @key_object.key_shifts
-    date_offsets = @dateid_object.date_offsets
+    keys = @key_object.key_shifts
+    dates = @dateid_object.date_offsets
 
+    @shift = keys.map do |key, value|
+      value.to_i + dates[key].to_i
+    end
   end
 
   def decrypt(ciphertext, key, date)
