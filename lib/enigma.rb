@@ -2,13 +2,8 @@ require './lib/key'
 require './lib/date'
 
 class Enigma
-  attr_reader :alphabet
 
   def initialize
-    @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
-  end
-
-  def load_file(file)
   end
 
   def encrypt(message, key: nil, date: nil)
@@ -17,8 +12,7 @@ class Enigma
     calculate_shift
     ecryption = { :encryption => encode_message(message),
                   :key => @key_object.key_string,
-                  :date => @dateid_object.date_string
-                }
+                  :date => @dateid_object.date_string }
   end
 
   def calculate_shift
@@ -31,8 +25,9 @@ class Enigma
   end
 
   def encode_message(message)
+    alphabet = (("a".."z").to_a << " ").unshift("NOPE")
     new_chars = []
-    message.split("").each do |char|
+    message.downcase.split("").each do |char|
       new_index = (alphabet.find_index(char) + @shift[0]) % 27
       new_chars << alphabet[new_index]
       @shift = @shift.rotate

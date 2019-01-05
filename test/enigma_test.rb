@@ -15,11 +15,6 @@ class EnigmaTest < Minitest::Test
     assert_instance_of Enigma, @enigma
   end
 
-  def test_it_initializes_with_alphabet
-    expected = ["NOPE", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]
-    assert_equal expected, @enigma.alphabet
-  end
-
   def test_encryption_key_and_date_given
     enigma1 = Enigma.new
     expected =  { :encryption => "lspiuftg",
@@ -74,7 +69,7 @@ class EnigmaTest < Minitest::Test
     enigma1.encrypt("abcd", key: "01234", date: "101183")
     enigma1.calculate_shift
 
-    assert_equal "krgt", enigma1.encode_message("abcd")
+    assert_equal "krgt", enigma1.encode_message("ABCD")
   end
 
 end
