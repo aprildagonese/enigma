@@ -2,9 +2,9 @@ require './lib/enigma'
 
 class Encryption < Enigma
 
-  def encrypt(message, key, date)
+  def encrypt(message, key = nil, date = nil)
     set_up_enigma(key, date)
-    calculate_shift
+    self.calculate_shift
     @encrypted = { :encryption => encode_message(message),
                   :key => @key_object.key_string,
                   :date => @dateid_object.date_string }
