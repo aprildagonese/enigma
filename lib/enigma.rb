@@ -4,9 +4,8 @@ require './lib/crack'
 
 class Enigma
   include Crack
-  #decrypt
-  #CLI
-  #cracking
+
+  attr_reader :encrypted, :decrypted
 
   def initialize
     @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
@@ -16,7 +15,7 @@ class Enigma
     @key_object = Key.new(key)
     @dateid_object = DateID.new(date)
     calculate_shift
-    ecryption = { :encryption => encode_message(message),
+    @encrypted = { :encryption => encode_message(message),
                   :key => @key_object.key_string,
                   :date => @dateid_object.date_string }
   end
@@ -48,7 +47,7 @@ class Enigma
     @dateid_object = DateID.new(date)
     @ciphertext = ciphertext
     create_key_object(key)
-    decryption = { :decryption => decode_ciphertext(ciphertext),
+    @decrypted = { :decryption => decode_ciphertext(ciphertext),
                    :key => @key_object.key_string,
                    :date => @dateid_object.date_string }
   end
@@ -76,7 +75,7 @@ class Enigma
       else
         new_chars << char
       end
-      @shift = @shift.rotate  
+      @shift = @shift.rotate
     end
     new_chars.join
   end
