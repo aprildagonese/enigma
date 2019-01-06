@@ -9,7 +9,7 @@ class Enigma
   #fix NOPEs in alphabet
   #finish crack
   #add mocks and stubs
-  #add class
+  #add class method
   #refactor decrypt w/splat
 
   attr_reader :encrypted, :decrypted, :text,

@@ -2,18 +2,17 @@ require './lib/enigma'
 
 class Decryption < Enigma
 
-  def decrypt(text, key, date)
-    @ciphertext = test_it_exists
+  def decrypt(message, key, date)
     set_up_enigma(key, date)
-    @decrypted = { :decryption => decode_ciphertext(ciphertext),
+    @decrypted = { :decryption => decode_ciphertext(message),
                    :key => @key_object.key_string,
                    :date => @dateid_object.date_string }
   end
 
-  def decode_ciphertext(ciphertext)
+  def decode_ciphertext(message)
     calculate_shift
     new_chars = []
-    ciphertext.downcase.split("").each do |char|
+    message.downcase.split("").each do |char|
       if @alphabet.include?(char)
         difference = @alphabet.find_index(char) - (@shift[0] % 27)
         if difference > 0
