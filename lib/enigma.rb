@@ -9,23 +9,32 @@ class Enigma
   #fix NOPEs in alphabet
   #finish crack
   #add mocks and stubs
-  #prework for paired assessment
   #add class
   #refactor decrypt w/splat
 
-  attr_reader :encrypted, :decrypted
+  attr_reader :encrypted, :decrypted, :text,
 
   def initialize
-    @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
   end
 
-  def encrypt(message, key: nil, date: nil)
-    @key_object = Key.new(key)
+  def set_up_enigma(key, date)
+    @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
     @dateid_object = DateID.new(date)
-    calculate_shift
-    @encrypted = { :encryption => encode_message(message),
-                  :key => @key_object.key_string,
-                  :date => @dateid_object.date_string }
+    create_key_object(key)
+  end
+
+  def create_key_object(key)
+    if key == nil
+      if caller_locations[1].label == "encrypt"
+        @key_object = Key.new.generate_random_key
+      elsif caller_locations[1].label == "decrypt"
+        @key_object = Key.new(calculate_key)
+      else
+        "Caller location was #{caller_locations[1]}"
+      end
+    else
+      @key_object = Key.new(key)
+    end
   end
 
   def calculate_shift
@@ -37,55 +46,12 @@ class Enigma
     end
   end
 
-  def encode_message(message)
-    new_chars = []
-    message.downcase.split("").each do |char|
-      if @alphabet.include?(char)
-        new_index = (@alphabet.find_index(char) + @shift[0]) % 27
-        new_chars << @alphabet[new_index]
-      else
-        new_chars << char
-      end
-      @shift = @shift.rotate
-    end
-    new_chars.join
+  def encrypt(message, key = nil, date = nil)
+    @encrypted = Encryption.new.encrypt(message, key, date)
   end
 
-  def decrypt(ciphertext, key: nil, date: nil)
-    @dateid_object = DateID.new(date)
-    @ciphertext = ciphertext
-    create_key_object(key)
-    @decrypted = { :decryption => decode_ciphertext(ciphertext),
-                   :key => @key_object.key_string,
-                   :date => @dateid_object.date_string }
-  end
-
-  def create_key_object(key)
-    if key == nil
-      @key_object = Key.new(calculate_key)
-    else
-      @key_object = Key.new(key)
-    end
-  end
-
-  def decode_ciphertext(ciphertext)
-    calculate_shift
-    new_chars = []
-    ciphertext.downcase.split("").each do |char|
-      if @alphabet.include?(char)
-        difference = @alphabet.find_index(char) - (@shift[0] % 27)
-        if difference > 0
-          new_index = difference
-        else
-          new_index = 27 - difference.abs
-        end
-        new_chars << @alphabet[new_index]
-      else
-        new_chars << char
-      end
-      @shift = @shift.rotate
-    end
-    new_chars.join
+  def decrypt(message, key = nil, date = nil)
+    @decrypted = Decryption.new.decrypt(message, key, date)
   end
 
 end

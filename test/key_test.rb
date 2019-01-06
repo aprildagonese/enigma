@@ -20,13 +20,15 @@ class KeyTest < Minitest::Test
   end
 
   def test_it_generates_random_5_digit_key
-    key_a = Key.new.key_string
-    key_b = Key.new.key_string
+    key_a = Key.new
+    key_a.generate_random_key
+    key_b = Key.new
+    key_b.generate_random_key
 
-    assert_equal String, key_a.class
-    assert_equal 5, key_a.length
-    assert_equal 5, key_b.length
-    assert_equal false, key_a == key_b
+    assert_equal String, key_a.key_string.class
+    assert_equal 5, key_a.key_string.length
+    assert_equal 5, key_b.key_string.length
+    assert_equal false, key_a.key_string == key_b.key_string
   end
 
   def test_it_splits_key_into_keys
