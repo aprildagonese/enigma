@@ -70,19 +70,6 @@ class EnigmaTest < Minitest::Test
     assert_equal false, encoded1[:key] == encryption2[:key]
   end
 
-  def test_it_decodes_cyphertext
-    enigma1 = Enigma.new
-    enigma1.decrypt("krgt", key: "01234", date: "101183")
-    enigma2 = Enigma.new
-    enigma2.decrypt("lspiuftg", key: "88888", date: "101183")
-    enigma3 = Enigma.new
-    enigma3.decrypt("@cgx0wt!", key: "88888", date: "101183")
-
-    assert_equal "abcd", enigma1.decode_ciphertext("krgt")
-    assert_equal "whatever", enigma2.decode_ciphertext("lspiuftg")
-    assert_equal "@ssh0le!", enigma3.decode_ciphertext("@cgx0wt!")
-  end
-
   def test_decryption_key_and_date_given
     enigma1 = Enigma.new
     expected =  { :decryption => "whatever",
