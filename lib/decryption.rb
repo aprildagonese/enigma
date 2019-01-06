@@ -18,7 +18,7 @@ class Decryption < Enigma
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)
         difference = @alphabet.find_index(char) - (@shift[0] % 27)
-        if difference > 0
+        if difference >= 0
           new_index = difference
         else
           new_index = 27 - difference.abs

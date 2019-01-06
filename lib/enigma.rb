@@ -2,25 +2,21 @@ require './lib/key'
 require './lib/date'
 require './lib/crack'
 
+#finish crack
+#add mocks and stubs
+#add class method
+#refactor decrypt w/splat
+
 class Enigma
   include Crack
 
-  #fix NOPEs in alphabet
-  #finish crack
-  #add mocks and stubs
-  #add class method
-  #refactor decrypt w/splat
-
-  attr_reader :encryption, :decryption, :text
-  attr_accessor :dateid_object, :key_object
+  attr_reader :encryption, :decryption, :text, :dateid_object, :key_object
 
   def initialize
-    @key_object = ""
-    @dateid_object = ""
   end
 
   def set_up_enigma(key, date)
-    @alphabet = (("a".."z").to_a << " ").unshift("NOPE")
+    @alphabet = (("a".."z").to_a << " ")
     @dateid_object = DateID.new(date)
     create_key_object(key)
   end

@@ -1,4 +1,5 @@
 require './lib/enigma'
+require './lib/decryption'
 require './lib/key'
 require './lib/date'
 require './lib/crack'
