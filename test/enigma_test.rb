@@ -9,6 +9,7 @@ class EnigmaTest < Minitest::Test
 
   def setup
     @enigma = Enigma.new
+    @enigma2 = Enigma.new
   end
 
   def test_it_exists
@@ -16,11 +17,14 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_encryption_key_and_date_given
-    enigma1 = Enigma.new
     expected =  { :encryption => "lspiuftg",
                   :key => "88888",
                   :date => "101183" }
-    assert_equal expected, enigma1.encrypt("whatever", key: "88888", date: "101183")
+    expected2 =  { :encryption => "lspiuftg!",
+                   :key => "88888",
+                   :date => "101183" }
+    assert_equal expected, @enigma.encrypt("whatever", key: "88888", date: "101183")
+    assert_equal expected2, @enigma2.encrypt("whatever!", key: "88888", date: "101183")
   end
 
   def test_encrytion_random_key_stored
@@ -79,9 +83,12 @@ class EnigmaTest < Minitest::Test
     enigma1.decrypt("krgt", key: "01234", date: "101183")
     enigma2 = Enigma.new
     enigma2.decrypt("lspiuftg", key: "88888", date: "101183")
+    enigma3 = Enigma.new
+    enigma3.decrypt("@cgx0wt!", key: "88888", date: "101183")
 
     assert_equal "abcd", enigma1.decode_ciphertext("krgt")
     assert_equal "whatever", enigma2.decode_ciphertext("lspiuftg")
+    assert_equal "@ssh0le!", enigma3.decode_ciphertext("@cgx0wt!")
   end
 
   def test_decryption_key_and_date_given
@@ -101,6 +108,14 @@ class EnigmaTest < Minitest::Test
 
   def test_crack_module
     assert_equal "THIS MODULE WORKS!", @enigma.cracktest
-  end 
+  end
+
+  def test_it_finds_correct_date_rotation
+    @enigma.decrypt("abcde", key: "00000", date: "101183")
+    @enigma2.decrypt("abcdefghij", key: "00000", date: "101183")
+
+    assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation
+    assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation
+  end
 
 end

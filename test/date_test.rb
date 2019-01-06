@@ -3,6 +3,7 @@ SimpleCov.start
 require './lib/date'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'pry'
 
 class DateTest < Minitest::Test
 

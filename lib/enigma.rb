@@ -33,8 +33,12 @@ class Enigma
   def encode_message(message)
     new_chars = []
     message.downcase.split("").each do |char|
-      new_index = (@alphabet.find_index(char) + @shift[0]) % 27
-      new_chars << @alphabet[new_index]
+      if @alphabet.include?(char)
+        new_index = (@alphabet.find_index(char) + @shift[0]) % 27
+        new_chars << @alphabet[new_index]
+      else
+        new_chars << char
+      end
       @shift = @shift.rotate
     end
     new_chars.join
@@ -61,14 +65,18 @@ class Enigma
     calculate_shift
     new_chars = []
     ciphertext.downcase.split("").each do |char|
-      difference = @alphabet.find_index(char) - (@shift[0] % 27)
-      if difference > 0
-        new_index = difference
+      if @alphabet.include?(char)
+        difference = @alphabet.find_index(char) - (@shift[0] % 27)
+        if difference > 0
+          new_index = difference
+        else
+          new_index = 27 - difference.abs
+        end
+        new_chars << @alphabet[new_index]
       else
-        new_index = 27 - difference.abs
+        new_chars << char
       end
-      new_chars << @alphabet[new_index]
-      @shift = @shift.rotate
+      @shift = @shift.rotate  
     end
     new_chars.join
   end
