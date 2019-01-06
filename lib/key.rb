@@ -4,12 +4,8 @@ require './lib/date'
 class Key
   attr_reader :key_string
 
-  def initialize(key = nil)
-    if key == nil
-      @key_string = generate_random_key
-    else
-      @key_string = key
-    end
+  def initialize(key_string = nil)
+    @key_string = key_string
   end
 
   def generate_random_key
@@ -17,7 +13,7 @@ class Key
     5.times do
       random_key += rand(0..9).to_s
     end
-    random_key.rjust(5, "0")
+    @key_string = random_key.rjust(5, "0")
   end
 
   def key_shifts

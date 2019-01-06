@@ -16,50 +16,6 @@ class EnigmaTest < Minitest::Test
     assert_instance_of Enigma, @enigma
   end
 
-  def test_encryption_key_and_date_given
-    expected =  { :encryption => "lspiuftg",
-                  :key => "88888",
-                  :date => "101183" }
-    expected2 =  { :encryption => "lspiuftg!",
-                   :key => "88888",
-                   :date => "101183" }
-    assert_equal expected, @enigma.encrypt("whatever", key: "88888", date: "101183")
-    assert_equal expected2, @enigma2.encrypt("whatever!", key: "88888", date: "101183")
-  end
-
-  def test_encrytion_random_key_stored
-    enigma1 = Enigma.new
-    encryption1 = enigma1.encrypt("whatever", date: "101183")
-    encryption2 = enigma1.encrypt("whatever", date: "141084")
-
-    assert_equal 5, encryption1[:key].length
-    assert_equal "101183", encryption1[:date]
-    assert_equal 5, encryption2[:key].length
-    assert_equal "141084", encryption2[:date]
-    assert_equal false, encryption1[:key] == encryption2[:key]
-  end
-
-  def test_encryption_current_date_stored
-    enigma1 = Enigma.new
-    encryption1 = enigma1.encrypt("whatever", key: "12345")
-    encryption2 = enigma1.encrypt("whatever", key: "67890")
-
-    assert_equal "050119", encryption1[:date]
-    assert_equal "050119", encryption2[:date]
-  end
-
-  def test_encryption_no_key_or_date_given
-    enigma1 = Enigma.new
-    encryption1 = enigma1.encrypt("whatever")
-    encryption2 = enigma1.encrypt("whatever")
-
-    assert_equal 5, encryption1[:key].length
-    assert_equal "050119", encryption1[:date]
-    assert_equal 5, encryption2[:key].length
-    assert_equal "050119", encryption2[:date]
-    assert_equal false, encryption1[:key] == encryption2[:key]
-  end
-
   def test_it_calculates_shift
     enigma1 = Enigma.new
     enigma1.encrypt("whatever", key: "01234", date: "101183")
@@ -70,12 +26,48 @@ class EnigmaTest < Minitest::Test
     assert_equal [98, 2, 5, 42], enigma2.calculate_shift
   end
 
-  def test_it_encodes_message
-    enigma1 = Enigma.new
-    enigma1.encrypt("abcd", key: "01234", date: "101183")
-    enigma1.calculate_shift
+  def test_encryption_key_and_date_given
+    expected =  { :encryption => "lspiuftg",
+                  :key => "88888",
+                  :date => "101183" }
+    expected2 =  { :encryption => "lspiuftg!",
+                   :key => "88888",
+                   :date => "101183" }
+    assert_equal expected, @encryption.encrypt("whatever", key: "88888", date: "101183")
+    assert_equal expected2, @encryption2.encrypt("whatever!", key: "88888", date: "101183")
+  end
 
-    assert_equal "krgt", enigma1.encode_message("ABCD")
+  def test_encrytion_random_key_stored
+    encryption1 = Encryption.new
+    encryption1 = encryption1.encrypt("whatever", date: "101183")
+    encryption2 = encryption1.encrypt("whatever", date: "141084")
+
+    assert_equal 5, encryption1[:key].length
+    assert_equal "101183", encryption1[:date]
+    assert_equal 5, encryption2[:key].length
+    assert_equal "141084", encryption2[:date]
+    assert_equal false, encryption1[:key] == encryption2[:key]
+  end
+
+  def test_encryption_current_date_stored
+    encryption1 = Encryption.new
+    encoded1 = encryption1.encrypt("whatever", key: "12345")
+    encoded2 = encryption1.encrypt("whatever", key: "67890")
+
+    assert_equal "050119", encoded1[:date]
+    assert_equal "050119", encoded2[:date]
+  end
+
+  def test_encryption_no_key_or_date_given
+    encryption1 = Encryption.new
+    encoded1 = encryption1.encrypt("whatever")
+    encoded2 = encryption1.encrypt("whatever")
+
+    assert_equal 5, encoded1[:key].length
+    assert_equal "050119", encoded1[:date]
+    assert_equal 5, encoded2[:key].length
+    assert_equal "050119", encoded2[:date]
+    assert_equal false, encoded1[:key] == encryption2[:key]
   end
 
   def test_it_decodes_cyphertext
