@@ -5,6 +5,14 @@ require './lib/crack'
 class Enigma
   include Crack
 
+  #fix arg headers for data and key
+  #fix NOPEs in alphabet
+  #finish crack
+  #add mocks and stubs
+  #prework for paired assessment
+  #add class
+  #refactor decrypt w/splat
+
   attr_reader :encrypted, :decrypted
 
   def initialize
