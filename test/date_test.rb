@@ -28,7 +28,7 @@ class DateTest < Minitest::Test
   def test_it_initializes_with_todays_date
     date = DateID.new
 
-    assert_equal "050119", date.date_string
+    assert_equal "060119", date.date_string
   end
 
   def test_it_splits_date_into_offsets

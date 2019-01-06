@@ -1,8 +1,11 @@
 require './lib/enigma'
+require './lib/crack'
 
 class Decryption < Enigma
+  attr_reader :ciphertext
 
   def decrypt(message, key, date)
+    @ciphertext = message
     set_up_enigma(key, date)
     @decrypted = { :decryption => decode_ciphertext(message),
                    :key => @key_object.key_string,

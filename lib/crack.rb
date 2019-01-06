@@ -12,8 +12,8 @@ module Crack
 
   end
 
-  def find_date_rotation
-    rotation_count = @ciphertext.length % 4
+  def find_date_rotation(ciphertext)
+    rotation_count = ciphertext.length % 4
     date_shifts = @dateid_object.date_offsets.values
     rotation_count.times do
       date_shifts = date_shifts.rotate
@@ -25,7 +25,7 @@ module Crack
     control = " end".split("")
     last_four_chars = @ciphertext.split("")[-4..-1]
     (0..3).map do |i|
-    end 
+    end
   end
 
 end

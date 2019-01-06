@@ -5,16 +5,18 @@ require './lib/crack'
 class Enigma
   include Crack
 
-  #fix arg headers for data and key
   #fix NOPEs in alphabet
   #finish crack
   #add mocks and stubs
   #add class method
   #refactor decrypt w/splat
 
-  attr_reader :encrypted, :decrypted, :text,
+  attr_reader :encryption, :decryption, :text
+  attr_accessor :dateid_object, :key_object
 
   def initialize
+    @key_object = ""
+    @dateid_object = ""
   end
 
   def set_up_enigma(key, date)
@@ -24,13 +26,15 @@ class Enigma
   end
 
   def create_key_object(key)
+    caller = caller_locations[1].label
     if key == nil
-      if caller_locations[1].label == "encrypt"
-        @key_object = Key.new.generate_random_key
-      elsif caller_locations[1].label == "decrypt"
+      if caller == "encrypt"
+        @key_object = Key.new
+        @key_object.generate_random_key
+      elsif caller == "decrypt"
         @key_object = Key.new(calculate_key)
       else
-        "Caller location was #{caller_locations[1]}"
+        @key_object = "ERROR"
       end
     else
       @key_object = Key.new(key)
@@ -47,11 +51,14 @@ class Enigma
   end
 
   def encrypt(message, key = nil, date = nil)
-    @encrypted = Encryption.new.encrypt(message, key, date)
+    @encryption = Encryption.new
+    @encryption.encrypt(message, key, date)
+
   end
 
   def decrypt(message, key = nil, date = nil)
-    @decrypted = Decryption.new.decrypt(message, key, date)
+    @decryption = Decryption.new
+    @decryption.decrypt(message, key, date)
   end
 
 end
