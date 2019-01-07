@@ -14,6 +14,7 @@ class EnigmaTest < Minitest::Test
     @enigma = Enigma.new
     @enigma2 = Enigma.new
     @enigma3 = Enigma.new
+    @enigma4 = Enigma.new
   end
 
   def test_it_exists
@@ -170,11 +171,11 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, @enigma.crack_package("lspiuftgppbt", "101183")
 
 
-    @enigma2.set_up_enigma("111118")
-    expected2 =  { :decryption => "whatever! end",
-                   :key => "12345",
-                   :date => "111118" }
-    assert_equal expected2, @enigma2.crack_package("qmjoz nm!eniy", "111118")
+    # @enigma2.set_up_enigma("111118")
+    # expected2 =  { :decryption => "whatever! end",
+    #                :key => "12345",
+    #                :date => "111118" }
+    # assert_equal expected2, @enigma2.crack_package("qmjoz nm!eniy", "111118")
 
     @enigma3.set_up_enigma("111118")
     expected3 =  { :decryption => "abcdefghijkl end",
@@ -182,11 +183,41 @@ class EnigmaTest < Minitest::Test
                   :date => "111118" }
     assert_equal expected3, @enigma3.crack_package("vglzzkpccotgujwz", "111118")
 
-    @enigma3.set_up_enigma("111118")
-    expected3 =  { :decryption => "hiapril! end",
+    @enigma4.set_up_enigma("111118")
+    expected4 =  { :decryption => "hiapril! end",
                   :key => "12345",
                   :date => "111118" }
-    assert_equal expected3, @enigma3.crack_package("bnjklnu!ujwz", "111118")
+                  binding.pry
+    assert_equal expected4, @enigma4.crack_package("bnjklnu!ujwz", "111118")
+  end
+
+  def test_it_cracks
+    expected =  { :decryption => "inspiration end",
+                  :key => "98765",
+                  :date => "260454" }
+    assert_equal expected, @enigma.crack("euofeyxjevjqau ", "101183")
+
+    expected2 =  { :decryption => "compassion end",
+                  :key => "11111",
+                  :date => "051257" }
+    assert_equal expected, @enigma2.crack("nzailcgbzyoyyo", "101183")
+
+    expected3 =  { :decryption => "kindness end",
+                  :key => "82746",
+                  :date => "101183" }
+    assert_equal expected3, @enigma.crack("umoexittjioe", "101183")
+  end
+
+  def test_it_cracks_special_chars
+    expected =  { :decryption => "laughter! end",
+                  :key => "01030",
+                  :date => "130385" }
+    assert_equal expected, @enigma.crack("umzoqejz!ljvm", "101183")
+
+    expected =  { :decryption => "*magic* end",
+                  :key => "55555",
+                  :date => "300983" }
+    assert_equal expected, @enigma.crack("*pjqpf*jlqm", "300983")
   end
 
 end
