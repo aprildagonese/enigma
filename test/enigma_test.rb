@@ -107,7 +107,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_key_and_date_given
-    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "101183" }
@@ -115,7 +114,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_no_date_given
-    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "060119" }
@@ -123,14 +121,11 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_finds_correct_date_rotation
-    skip
     @enigma.decrypt("abcde", "00000", "101183")
     @enigma2.decrypt("abcdefghij", "00000", "101183")
 
-    assert_equal ["4", "8", "9", "9"], @enigma.decryption.find_date_rotation("abcde")
-    assert_equal ["8", "9", "9", "4"], @enigma2.decryption.find_date_rotation("abcdefghij")
+    assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
+    assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
   end
-
-
 
 end

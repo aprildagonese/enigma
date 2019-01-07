@@ -7,9 +7,9 @@ module Crack
     end
   end
 
-  def find_date_rotation(ciphertext)
+  def find_date_rotation(ciphertext, date = generate_todays_date)
     rotation_count = ciphertext.length % 4
-    date_shifts = @dateid_object.date_offsets.values
+    date_shifts = date_offsets(date).values
     rotation_count.times do
       date_shifts = date_shifts.rotate
     end
