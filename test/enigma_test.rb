@@ -20,7 +20,7 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_sets_given_key
-    @enigma.set_up_enigma("01234", "101183")
+    @enigma.set_up_shift("01234")
     assert_equal "01234", @enigma.key_string
   end
 
@@ -44,7 +44,7 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_sets_given_date
-    @enigma.set_up_enigma("12345", "011118")
+    @enigma.set_up_enigma("011118")
 
     assert_equal "011118", @enigma.date_string
   end
@@ -74,6 +74,12 @@ class EnigmaTest < Minitest::Test
 
     assert_equal [10, 16, 31, 43], @enigma.calculate_shift("01234", "101183")
     assert_equal [98, 2, 5, 42], @enigma.calculate_shift("90037", "130385")
+  end
+
+  def test_it_encodes_message
+    encryption = @enigma.encrypt("ABCD", "01234", "101183")
+
+    assert_equal "krgt", encryption[:encryption]
   end
 
   def test_encryption_key_and_date_given
@@ -121,11 +127,18 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_finds_correct_date_rotation
-    @enigma.decrypt("abcde", "00000", "101183")
-    @enigma2.decrypt("abcdefghij", "00000", "101183")
-
     assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
     assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
+  end
+
+  def test_it_decodes_cyphertext
+    decryption1 = @enigma.decrypt("krgt", "01234", "101183")
+    decryption2 = @enigma.decrypt("lspiuftg", "88888", "101183")
+    decryption3 = @enigma.decrypt("@cgx0wt!", "88888", "101183")
+
+    assert_equal "abcd", decryption1[:decryption]
+    assert_equal "whatever", decryption2[:decryption]
+    assert_equal "@ssh0le!", decryption3[:decryption]
   end
 
 end

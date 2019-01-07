@@ -24,23 +24,28 @@ class Enigma
   end
 
   def encrypt(message, key = nil, date = nil)
-    set_up_enigma(key, date)
+    set_up_enigma(date)
+    set_up_shift(key)
     encrypt_package(message)
   end
 
   def decrypt(message, key = nil, date = nil)
-    set_up_enigma(key, date)
+    set_up_enigma(date)
+    set_up_shift(key)
     decrypt_package(message, key, date)
   end
 
   def crack(message)
-    set_up_enigma(key, date)
+    set_up_enigma(date)
     crack_package(message)
   end
 
-  def set_up_enigma(key = nil, date = nil)
+  def set_up_enigma(date = nil)
     @alphabet = (("a".."z").to_a << " ")
     @date_string = set_date(date)
+  end
+
+  def set_up_shift(key = nil)
     @key_string = set_key(key)
     @shift = calculate_shift(@key_string, @date_string)
   end
