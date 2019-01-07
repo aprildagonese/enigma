@@ -6,14 +6,14 @@ module Crack
 
   def calculate_key_chars(message, date)
     last_four_chars = message.split("")[-4..-1]
-    key_string = "00000"
-    date_shifts = find_date_rotation(message, date)
-    @shift = alternative_shift(key_string, date_shifts)
+    key_strings = ("00000".."99999").to_a
+    date_shift = find_date_rotation(message, date)
 
-    until decode_ciphertext(last_four_chars.join) == " end"
-      key_string = key_string.next
+    correct_key = key_strings.find do |key|
+      shift = alternative_shift(key, date_shift)
+      decode_ciphertext(last_four_chars.join, shift) == " end"
     end
-    key_string
+    correct_key
   end
 
   def find_date_rotation(ciphertext, date = generate_todays_date)
@@ -25,12 +25,13 @@ module Crack
     date_shifts
   end
 
-  def alternative_shift(key, date_shifts)
-    dates = date_shifts
-    key_shifts(key).map do |key, value|
-      value.to_i + dates[0].to_i
-      dates = dates.rotate
+  def alternative_shift(key, date_shift)
+    total_shift = []
+    key_shifts(key).each do |key, value|
+      total_shift << (value.to_i + date_shift[0].to_i)
+      date_shift = date_shift.rotate
     end
+    total_shift
   end
 
 end
