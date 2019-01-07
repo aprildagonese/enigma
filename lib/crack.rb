@@ -1,15 +1,12 @@
-module Crack
+require './lib/decryption'
 
-  def cracktest
-    "THIS MODULE WORKS!"
-  end
+class Crack < Decryption
 
   def calculate_key
     split_chars = @ciphertext.split("")
     split_chars.each do |char|
       @alphabet.find_index(char)
     end
-
   end
 
   def find_date_rotation(ciphertext)
@@ -22,10 +19,14 @@ module Crack
   end
 
   def calculate_key_chars
-    control = " end".split("")
     last_four_chars = @ciphertext.split("")[-4..-1]
-    (0..3).map do |i|
+    key_string = "00000"
+    @shift = backcalculate_shift
+    until decode_ciphertext(last_four_chars) = " end"
     end
+  end
+
+  def backcalculate_shift
   end
 
 end
