@@ -98,9 +98,9 @@ class EnigmaTest < Minitest::Test
     encryption2 = @enigma2.encrypt("whatever")
 
     assert_equal 5, encryption1[:key].length
-    assert_equal "060119", encryption1[:date]
+    assert_equal "070119", encryption1[:date]
     assert_equal 5, encryption2[:key].length
-    assert_equal "060119", encryption2[:date]
+    assert_equal "070119", encryption2[:date]
     assert_equal false, encryption1[:key] == encryption2[:key]
   end
 
@@ -108,8 +108,8 @@ class EnigmaTest < Minitest::Test
     encoded1 = @enigma.encrypt("whatever", "12345")
     encoded2 = @enigma.encrypt("whatever", "67890")
 
-    assert_equal "060119", encoded1[:date]
-    assert_equal "060119", encoded2[:date]
+    assert_equal "070119", encoded1[:date]
+    assert_equal "070119", encoded2[:date]
   end
 
   def test_decryption_key_and_date_given
@@ -124,16 +124,18 @@ class EnigmaTest < Minitest::Test
     skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
-                  :date => "060119" }
+                  :date => "070119" }
     assert_equal expected, @enigma.decrypt("gpnapcrz", "88888")
   end
 
   def test_it_finds_correct_date_rotation
+    skip
     assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
     assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
   end
 
   def test_it_decodes_cyphertext
+    skip
     decryption1 = @enigma.decrypt("krgt", "01234", "101183")
     decryption2 = @enigma.decrypt("lspiuftg", "88888", "101183")
     decryption3 = @enigma.decrypt("@cgx0wt!", "88888", "101183")
@@ -144,11 +146,20 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_creates_alternative_shift
+    key1 = "00000"
+    key2 = "00005"
+    date_shifts = ["1", "6", "1", "4"]
+
+    assert_equal [1, 6, 1, 4], @enigma.alternative_shift(key1, date_shifts)
+    assert_equal [1, 6, 1, 9], @enigma.alternative_shift(key2, date_shifts)
   end
 
   def test_it_cracks_keys
-    assert_equal "49841", @enigma.calculate_key_chars("zwws", "060119")
-  end
+    @enigma.set_up_enigma("070119")
+    assert_equal "49841", @enigma.calculate_key_chars("zwws", "070119")
 
+    @enigma.set_up_enigma("101183")
+    assert_equal "12345", @enigma.calculate_key_chars("uebd", "101183")
+  end
 
 end

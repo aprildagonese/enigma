@@ -1,15 +1,14 @@
 module Decryption
 
   def decrypt_package(message, key, date)
-    @ciphertext = message
-    @decrypted = { :decryption => decode_ciphertext(message),
+    @decrypted = { :decryption => decode_ciphertext(message, @shift),
                    :key => @key_string,
                    :date => @date_string }
   end
 
 
-  def decode_ciphertext(message)
-    @alphabet = (("a".."z").to_a << " ")
+  def decode_ciphertext(message, shift)
+    @shift = shift
     new_chars = []
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)
