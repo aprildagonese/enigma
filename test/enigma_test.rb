@@ -135,10 +135,10 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, @enigma.decrypt("gpnapcrz", "88888")
   end
 
-  def test_it_finds_correct_date_rotation
-    assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
-    assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
-  end
+  # def test_it_finds_correct_date_rotation
+  #   assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
+  #   assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
+  # end
 
   def test_it_decodes_cyphertext
     decryption1 = @enigma.decrypt("krgt", "01234", "101183")
@@ -191,7 +191,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_cracks_package_special_chars
-    skip
     @enigma2.set_up_enigma("111118")
     expected2 =  { :decryption => "whatever! end",
                    :key => "12345",
@@ -200,7 +199,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_cracks
-    skip
     expected =  { :decryption => "inspiration end",
                   :key => "98765",
                   :date => "260454" }
@@ -209,19 +207,19 @@ class EnigmaTest < Minitest::Test
     expected2 =  { :decryption => "compassion end",
                   :key => "11111",
                   :date => "051257" }
-    assert_equal expected, @enigma2.crack("nzailcgbzyoyyo", "051257")
+    assert_equal expected2, @enigma2.crack("nzailcgbzyoyyo", "051257")
 
     expected3 =  { :decryption => "kindness end",
-                  :key => "82746",
+                  :key => "55473",
                   :date => "101183" }
-    assert_equal expected3, @enigma.crack("umoexittjioe", "101183")
+    assert_equal expected3, @enigma3.crack("umoexittjioe", "101183")
   end
 
   def test_it_cracks_special_chars
-    # expected =  { :decryption => "laughter! end",
-    #               :key => "01030",
-    #               :date => "130385" }
-    # assert_equal expected, @enigma.crack("umzoqejz!ljvm", "130385")
+    expected =  { :decryption => "laughter! end",
+                  :key => "01030",
+                  :date => "130385" }
+    assert_equal expected, @enigma.crack("umzoqejz!ljvm", "130385")
 
     expected =  { :decryption => "*magic* end",
                   :key => "28282",
