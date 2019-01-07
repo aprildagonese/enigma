@@ -121,6 +121,13 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, @enigma.decrypt("lspiuftg", "88888", "101183")
   end
 
+  def test_decryption_key_and_date_given_special_chars
+    expected =  { :decryption => "tests!",
+                  :key => "88888",
+                  :date => "101183" }
+    assert_equal expected, @enigma.decrypt("ipgih!", "88888", "101183")
+  end
+
   def test_decryption_no_date_given
     expected =  { :decryption => "whatever",
                   :key => "88888",
