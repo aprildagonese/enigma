@@ -1,37 +1,17 @@
-module Crack
+require './lib/enigma'
+require './lib/crack_key'
+require 'pry'
 
-  def crack_package(message)
-    split_chars = message.split("")
-  end
+args = ARGV
+ciphertext_file = args[0]
+message_name = args[1]
+date = args[2]
 
-  def calculate_key_chars(message, date)
-    last_four_chars = message.split("")[-4..-1]
-    key_strings = ("00000".."99999").to_a
-    date_shift = find_date_rotation(message, date)
+ciphertext = File.open(ciphertext_file, "r").read
+enigma = Enigma.new.crack(ciphertext, date)
 
-    correct_key = key_strings.find do |key|
-      shift = alternative_shift(key, date_shift)
-      decode_ciphertext(last_four_chars.join, shift) == " end"
-    end
-    correct_key
-  end
+decoded_message = File.new(message_name, "w+")
+decoded_message.puts(enigma[:decryption])
+decoded_message.close
 
-  def find_date_rotation(ciphertext, date = generate_todays_date)
-    rotation_count = ciphertext.length % 4
-    date_shifts = date_offsets(date).values
-    rotation_count.times do
-      date_shifts = date_shifts.rotate
-    end
-    date_shifts
-  end
-
-  def alternative_shift(key, date_shift)
-    total_shift = []
-    key_shifts(key).each do |key, value|
-      total_shift << (value.to_i + date_shift[0].to_i)
-      date_shift = date_shift.rotate
-    end
-    total_shift
-  end
-
-end
+puts "Created #{message_name} with the key #{enigma[:key]} and date #{enigma[:date]}"

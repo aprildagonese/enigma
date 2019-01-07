@@ -1,5 +1,5 @@
 require './lib/shifts'
-require './lib/crack'
+require './lib/crack_key'
 require './lib/encryption'
 require './lib/decryption'
 
@@ -34,9 +34,9 @@ class Enigma
     decrypt_package(message, key, date)
   end
 
-  def crack(message)
+  def crack(message, date = nil)
     set_up_enigma(date)
-    crack_package(message)
+    crack_package(message, date)
   end
 
   def set_up_enigma(date = nil)
