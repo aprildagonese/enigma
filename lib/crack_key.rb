@@ -2,9 +2,7 @@ module Crack
 
   def crack_package(message, date)
     @key_string = crack_key(message, date)
-  #  binding.pry
     @shift = calculate_shift(@key_string, date)
-  #  binding.pry
     @decrypted = {  :decryption => decode_ciphertext(message, @shift),
                     :key => @key_string,
                     :date => @date_string }
@@ -18,7 +16,6 @@ module Crack
     correct_key = key_strings.find do |key|
       shift = alternative_shift(key, date_shift)
       decode_ciphertext(last_four_chars.join, shift) == " end"
-#      binding.pry
     end
     correct_key
   end
