@@ -113,6 +113,7 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_key_and_date_given
+    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "101183" }
@@ -120,6 +121,7 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_no_date_given
+    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "060119" }
@@ -140,5 +142,13 @@ class EnigmaTest < Minitest::Test
     assert_equal "whatever", decryption2[:decryption]
     assert_equal "@ssh0le!", decryption3[:decryption]
   end
+
+  def test_it_creates_alternative_shift
+  end
+
+  def test_it_cracks_keys
+    assert_equal "49841", @enigma.calculate_key_chars("zwws", "060119")
+  end
+
 
 end

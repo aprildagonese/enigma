@@ -9,6 +9,7 @@ module Decryption
 
 
   def decode_ciphertext(message)
+    @alphabet = (("a".."z").to_a << " ")
     new_chars = []
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)

@@ -3,7 +3,6 @@ require './lib/crack'
 require './lib/encryption'
 require './lib/decryption'
 
-
 #finish crack
 #add mocks and stubs
 #add class method
