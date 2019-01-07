@@ -1,6 +1,6 @@
 module Decryption
 
-  def decrypt(message, key, date)
+  def decrypt_package(message, key, date)
     @ciphertext = message
     set_up_enigma(key, date)
     @decrypted = { :decryption => generate_decryption(message),

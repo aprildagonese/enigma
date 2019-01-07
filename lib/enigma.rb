@@ -11,35 +11,38 @@ require './lib/decryption'
 #lines per method? chars per line?
 
 class Enigma
-  include Shifts, Encryption, Decryption
+  include Shifts, Encryption, Decryption, Crack
 
-  attr_reader :encryption, :decryption, :crack
-  attr_accessor :key_string, :date_string,
+  attr_accessor :key_string, :date_string, :encryption, :decryption, :crack, :shift
+
+  def initialize
+    @key_string = ""
+    @date_string = ""
+    @encryption = ""
+    @decryption = ""
+    @crack = ""
+  end
 
   def encrypt(message, key = nil, date = nil)
-    set_up_enigma
-    @encryption = Encryption.new
-    @encryption.encrypt(message, key, date)
-
+    set_up_enigma(key, date)
+    encrypt_package(message)
   end
 
   def decrypt(message, key = nil, date = nil)
-    set_up_enigma
-    @decryption = Decryption.new
-    @decryption.decrypt(message, key, date)
+    set_up_enigma(key, date)
+    decrypt_package(message, key, date)
   end
 
   def crack(message)
-    set_up_enigma
-    @crack = Crack.new
-    @crack.crack(message)
+    set_up_enigma(key, date)
+    crack_package(message)
   end
 
-  def set_up_enigma(key, date)
+  def set_up_enigma(key = nil, date = nil)
     @alphabet = (("a".."z").to_a << " ")
     @date_string = set_date(date)
     @key_string = set_key(key)
-    @shift = calculate_shift(@key, @date)
+    @shift = calculate_shift(@key_string, @date_string)
   end
 
 end

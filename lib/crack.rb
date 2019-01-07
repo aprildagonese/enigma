@@ -1,6 +1,4 @@
-require './lib/decryption'
-
-class Crack < Decryption
+module Crack
 
   def calculate_key
     split_chars = @ciphertext.split("")
@@ -22,7 +20,7 @@ class Crack < Decryption
     last_four_chars = @ciphertext.split("")[-4..-1]
     key_string = "00000"
     @shift = backcalculate_shift
-    until decode_ciphertext(last_four_chars) = " end"
+    until decode_ciphertext(last_four_chars) == " end"
     end
   end
 

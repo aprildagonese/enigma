@@ -1,21 +1,21 @@
 module Shifts
 
-  def set_key(key)
+  def set_key(key = nil)
     caller = caller_locations[1].label
     if key == nil
-      no_key
+      no_key(caller)
     else
       key
     end
   end
 
-  def no_key
+  def no_key(caller)
     if caller == "encrypt"
       generate_random_key
     elsif caller == "crack"
       calculate_key
     else
-      "ERROR"
+      "CALLER WAS #{caller}"
     end
   end
 
@@ -34,8 +34,8 @@ module Shifts
                     :D => key[3] + key[4] }
   end
 
-  def set_date(date)
-    if date = nil
+  def set_date(date = nil)
+    if date == nil
       generate_todays_date
     else
       date = date

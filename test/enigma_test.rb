@@ -1,6 +1,7 @@
 require 'simplecov'
 SimpleCov.start
 require './lib/enigma'
+require './lib/shifts'
 require './lib/encryption'
 require './lib/decryption'
 require 'minitest/autorun'
@@ -19,14 +20,13 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_sets_given_key
-    @enigma.set_key("01234")
-
-    assert_equal "01234", @enigma.key
+    @enigma.set_up_enigma("01234", "101183")
+    assert_equal "01234", @enigma.key_string
   end
 
   def test_it_generates_random_5_digit_key
-    key_a = generate_random_key
-    key_b = generate_random_key
+    key_a = @enigma.generate_random_key
+    key_b = @enigma.generate_random_key
 
     assert_equal String, key_a.class
     assert_equal 5, key_a.length
@@ -44,16 +44,16 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_sets_given_date
-    @enigma.set_date("011118")
+    @enigma.set_up_enigma("12345", "011118")
 
-    assert_equal "011118", @enigma.date
+    assert_equal "011118", @enigma.date_string
   end
 
   def test_it_generates_todays_date
-    @enigma.set_date
+    @enigma.set_up_enigma
 
-    assert_equal String, @enigma.date.class
-    assert_equal 6, @enigma.date.length
+    assert_equal String, @enigma.date_string.class
+    assert_equal 6, @enigma.date_string.length
   end
 
   def test_it_splits_date_into_offsets
