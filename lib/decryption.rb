@@ -6,24 +6,18 @@ module Decryption
                    :date => @date_string }
   end
 
-
   def decode_ciphertext(message, shift)
-    new_chars = []
-    message.downcase.split("").each do |char|
-      if @alphabet.include?(char)
-        difference = @alphabet.find_index(char) - (shift[0] % 27)
-        if difference >= 0
-          new_index = difference
-        else
-          new_index = 27 - difference.abs
-        end
-        new_chars << @alphabet[new_index]
-      else
-        new_chars << char
-      end
-      shift = shift.rotate
+    message.downcase.split("").map.with_index do |char, index|
+      find_decode_char(char, index, shift)
+    end.join
+  end
+
+  def find_decode_char(char, index, shift)
+    if @alphabet.include?(char)
+      @alphabet[@alphabet.find_index(char) - (shift[index % 4] % 27)]
+    else
+      char
     end
-    new_chars.join
   end
 
 end
