@@ -6,6 +6,7 @@ require './lib/crack'
 #add mocks and stubs
 #add class method
 #refactor decrypt w/splat
+#lines per method? chars per line?
 
 class Enigma
   include Crack
@@ -27,7 +28,7 @@ class Enigma
       if caller == "encrypt"
         @key_object = Key.new
         @key_object.generate_random_key
-      elsif caller == "decrypt"
+      elsif caller == "crack"
         @key_object = Key.new(calculate_key)
       else
         @key_object = "ERROR"
@@ -55,6 +56,11 @@ class Enigma
   def decrypt(message, key = nil, date = nil)
     @decryption = Decryption.new
     @decryption.decrypt(message, key, date)
+  end
+
+  def crack(message)
+    @crack = Crack.new
+    @crack.crack(message)
   end
 
 end

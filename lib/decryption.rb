@@ -7,13 +7,18 @@ class Decryption < Enigma
   def decrypt(message, key, date)
     @ciphertext = message
     set_up_enigma(key, date)
-    @decrypted = { :decryption => decode_ciphertext(message),
+    @decrypted = { :decryption => generate_decryption(message),
                    :key => @key_object.key_string,
                    :date => @dateid_object.date_string }
   end
 
-  def decode_ciphertext(message)
+  def generate_decryption(message)
     calculate_shift
+    decode_ciphertext(message)
+  end
+
+
+  def decode_ciphertext(message)
     new_chars = []
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)
