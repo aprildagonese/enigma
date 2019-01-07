@@ -36,7 +36,7 @@ class Enigma
 
   def crack(message, date = nil)
     set_up_enigma(date)
-    crack_package(message)
+    crack_package(message, date)
   end
 
   def set_up_enigma(date = nil)
