@@ -135,11 +135,6 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, @enigma.decrypt("gpnapcrz", "88888")
   end
 
-  # def test_it_finds_correct_date_rotation
-  #   assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
-  #   assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
-  # end
-
   def test_it_decodes_cyphertext
     decryption1 = @enigma.decrypt("krgt", "01234", "101183")
     decryption2 = @enigma.decrypt("lspiuftg", "88888", "101183")
@@ -148,15 +143,6 @@ class EnigmaTest < Minitest::Test
     assert_equal "abcd", decryption1[:decryption]
     assert_equal "whatever", decryption2[:decryption]
     assert_equal "@ssh0le!", decryption3[:decryption]
-  end
-
-  def test_it_creates_alternative_shift
-    key1 = "00000"
-    key2 = "00005"
-    date_shifts = ["1", "6", "1", "4"]
-
-    assert_equal [1, 6, 1, 4], @enigma.alternative_shift(key1, date_shifts)
-    assert_equal [1, 6, 1, 9], @enigma.alternative_shift(key2, date_shifts)
   end
 
   def test_it_cracks_keys
