@@ -7,17 +7,17 @@ module Encryption
   end
 
   def encode_message(message)
-    new_chars = []
-    message.downcase.split("").each do |char|
-      if @alphabet.include?(char)
-        new_index = (@alphabet.find_index(char) + @shift[0]) % 27
-        new_chars << @alphabet[new_index]
-      else
-        new_chars << char
-      end
-      @shift = @shift.rotate
+    message.downcase.split("").map.with_index do |char, index|
+      find_encode_char(char, index)
+    end.join
+  end
+
+  def find_encode_char(char, index)
+    if @alphabet.include?(char)
+      @alphabet[(@alphabet.find_index(char) + @shift[index % 4]) % 27]
+    else
+      char
     end
-    new_chars.join
   end
 
 end

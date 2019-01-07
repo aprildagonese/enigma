@@ -3,7 +3,6 @@ require './lib/crack_key'
 require './lib/encryption'
 require './lib/decryption'
 
-#finish crack
 #add mocks and stubs
 #add class method
 #refactor decrypt w/splat
@@ -12,14 +11,11 @@ require './lib/decryption'
 class Enigma
   include Shifts, Encryption, Decryption, Crack
 
-  attr_accessor :key_string, :date_string, :encryption, :decryption, :crack, :shift
+  attr_accessor :key_string, :date_string, :shift
 
   def initialize
     @key_string = ""
     @date_string = ""
-    @encryption = ""
-    @decryption = ""
-    @crack = ""
   end
 
   def encrypt(message, key = nil, date = nil)
