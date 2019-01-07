@@ -8,11 +8,10 @@ module Decryption
 
 
   def decode_ciphertext(message, shift)
-    @shift = shift
     new_chars = []
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)
-        difference = @alphabet.find_index(char) - (@shift[0] % 27)
+        difference = @alphabet.find_index(char) - (shift[0] % 27)
         if difference >= 0
           new_index = difference
         else
@@ -22,7 +21,7 @@ module Decryption
       else
         new_chars << char
       end
-      @shift = @shift.rotate
+      shift = shift.rotate
     end
     new_chars.join
   end

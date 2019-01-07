@@ -13,6 +13,7 @@ class EnigmaTest < Minitest::Test
   def setup
     @enigma = Enigma.new
     @enigma2 = Enigma.new
+    @enigma3 = Enigma.new
   end
 
   def test_it_exists
@@ -113,7 +114,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_key_and_date_given
-    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "101183" }
@@ -121,7 +121,6 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_decryption_no_date_given
-    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "070119" }
@@ -129,13 +128,11 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_it_finds_correct_date_rotation
-    skip
     assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
     assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
   end
 
   def test_it_decodes_cyphertext
-    skip
     decryption1 = @enigma.decrypt("krgt", "01234", "101183")
     decryption2 = @enigma.decrypt("lspiuftg", "88888", "101183")
     decryption3 = @enigma.decrypt("@cgx0wt!", "88888", "101183")
@@ -156,10 +153,40 @@ class EnigmaTest < Minitest::Test
 
   def test_it_cracks_keys
     @enigma.set_up_enigma("070119")
-    assert_equal "49841", @enigma.calculate_key_chars("zwws", "070119")
+    assert_equal "49841", @enigma.crack_key("zwws", "070119")
 
     @enigma.set_up_enigma("101183")
-    assert_equal "12345", @enigma.calculate_key_chars("uebd", "101183")
+    assert_equal "12345", @enigma.crack_key("uebd", "101183")
+
+    @enigma2.set_up_enigma("111118")
+    assert_equal "12345", @enigma2.crack_key("ujwz", "111118")
+  end
+
+  def test_it_cracks_package
+    @enigma.set_up_enigma("101183")
+    expected =  { :decryption => "whatever end",
+                  :key => "88888",
+                  :date => "101183" }
+    assert_equal expected, @enigma.crack_package("lspiuftgppbt", "101183")
+
+
+    @enigma2.set_up_enigma("111118")
+    expected2 =  { :decryption => "whatever! end",
+                   :key => "12345",
+                   :date => "111118" }
+    assert_equal expected2, @enigma2.crack_package("qmjoz nm!eniy", "111118")
+
+    @enigma3.set_up_enigma("111118")
+    expected3 =  { :decryption => "abcdefghijkl end",
+                  :key => "12345",
+                  :date => "111118" }
+    assert_equal expected3, @enigma3.crack_package("vglzzkpccotgujwz", "111118")
+
+    @enigma3.set_up_enigma("111118")
+    expected3 =  { :decryption => "hiapril! end",
+                  :key => "12345",
+                  :date => "111118" }
+    assert_equal expected3, @enigma3.crack_package("bnjklnu!ujwz", "111118")
   end
 
 end
