@@ -1,8 +1,4 @@
-require './lib/enigma'
-require './lib/crack'
-
-class Decryption < Enigma
-  attr_reader :ciphertext
+module Decryption
 
   def decrypt(message, key, date)
     @ciphertext = message

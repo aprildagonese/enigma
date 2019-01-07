@@ -15,28 +15,6 @@ class KeyTest < Minitest::Test
     assert_instance_of Key, @key
   end
 
-  def test_it_initializes_with_given_key
-    assert_equal "01234", @key.key_string
-  end
 
-  def test_it_generates_random_5_digit_key
-    key_a = Key.new
-    key_a.generate_random_key
-    key_b = Key.new
-    key_b.generate_random_key
-
-    assert_equal String, key_a.key_string.class
-    assert_equal 5, key_a.key_string.length
-    assert_equal 5, key_b.key_string.length
-    assert_equal false, key_a.key_string == key_b.key_string
-  end
-
-  def test_it_splits_key_into_keys
-    expected = { :A => "01",
-                 :B => "12",
-                 :C => "23",
-                 :D => "34" }
-    assert_equal expected, @key.key_shifts
-  end
 
 end

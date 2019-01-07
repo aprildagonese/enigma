@@ -1,6 +1,8 @@
-require './lib/key'
-require './lib/date'
+require './lib/shifts'
 require './lib/crack'
+require './lib/encryption'
+require './lib/decryption'
+
 
 #finish crack
 #add mocks and stubs
@@ -9,58 +11,35 @@ require './lib/crack'
 #lines per method? chars per line?
 
 class Enigma
-  include Crack
+  include Shifts, Encryption, Decryption
 
-  attr_reader :encryption, :decryption, :text, :dateid_object, :key_object
-
-  def initialize
-  end
-
-  def set_up_enigma(key, date)
-    @alphabet = (("a".."z").to_a << " ")
-    @dateid_object = DateID.new(date)
-    create_key_object(key)
-  end
-
-  def create_key_object(key)
-    caller = caller_locations[1].label
-    if key == nil
-      if caller == "encrypt"
-        @key_object = Key.new
-        @key_object.generate_random_key
-      elsif caller == "crack"
-        @key_object = Key.new(calculate_key)
-      else
-        @key_object = "ERROR"
-      end
-    else
-      @key_object = Key.new(key)
-    end
-  end
-
-  def calculate_shift
-    keys = @key_object.key_shifts
-    dates = @dateid_object.date_offsets
-
-    @shift = keys.map do |key, value|
-      value.to_i + dates[key].to_i
-    end
-  end
+  attr_reader :encryption, :decryption, :crack
+  attr_accessor :key_string, :date_string,
 
   def encrypt(message, key = nil, date = nil)
+    set_up_enigma
     @encryption = Encryption.new
     @encryption.encrypt(message, key, date)
 
   end
 
   def decrypt(message, key = nil, date = nil)
+    set_up_enigma
     @decryption = Decryption.new
     @decryption.decrypt(message, key, date)
   end
 
   def crack(message)
+    set_up_enigma
     @crack = Crack.new
     @crack.crack(message)
+  end
+
+  def set_up_enigma(key, date)
+    @alphabet = (("a".."z").to_a << " ")
+    @date_string = set_date(date)
+    @key_string = set_key(key)
+    @shift = calculate_shift(@key, @date)
   end
 
 end
