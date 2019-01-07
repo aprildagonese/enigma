@@ -1,6 +1,7 @@
 require 'simplecov'
 SimpleCov.start
 require './lib/enigma'
+require './lib/shifts'
 require './lib/encryption'
 require './lib/decryption'
 require 'minitest/autorun'
@@ -18,14 +19,67 @@ class EnigmaTest < Minitest::Test
     assert_instance_of Enigma, @enigma
   end
 
-  def test_it_calculates_shift
-    enigma1 = Enigma.new
-    enigma1.encrypt("whatever", "01234", "101183")
-    enigma2 = Enigma.new
-    enigma2.encrypt("whatever", "90037", "130385")
+  def test_it_sets_given_key
+    @enigma.set_up_shift("01234")
+    assert_equal "01234", @enigma.key_string
+  end
 
-    assert_equal [10, 16, 31, 43], enigma1.encryption.calculate_shift
-    assert_equal [98, 2, 5, 42], enigma2.encryption.calculate_shift
+  def test_it_generates_random_5_digit_key
+    key_a = @enigma.generate_random_key
+    key_b = @enigma.generate_random_key
+
+    assert_equal String, key_a.class
+    assert_equal 5, key_a.length
+    assert_equal 5, key_b.length
+    assert_equal false, key_a == key_b
+  end
+
+  def test_it_splits_key_into_key_shifts
+    expected = { :A => "01",
+                 :B => "12",
+                 :C => "23",
+                 :D => "34" }
+
+    assert_equal expected, @enigma.key_shifts("01234")
+  end
+
+  def test_it_sets_given_date
+    @enigma.set_up_enigma("011118")
+
+    assert_equal "011118", @enigma.date_string
+  end
+
+  def test_it_generates_todays_date
+    @enigma.set_up_enigma
+
+    assert_equal String, @enigma.date_string.class
+    assert_equal 6, @enigma.date_string.length
+  end
+
+  def test_it_splits_date_into_offsets
+    expected = { :A => "9",
+                 :B => "9",
+                 :C => "2",
+                 :D => "4" }
+    assert_equal expected, @enigma.date_offsets("111118")
+
+    expected2 = { :A => "9",
+                  :B => "4",
+                  :C => "8",
+                  :D => "9" }
+    assert_equal expected2, @enigma.date_offsets("101183")
+  end
+
+  def test_it_calculates_shift
+
+    assert_equal [10, 16, 31, 43], @enigma.calculate_shift("01234", "101183")
+    assert_equal [98, 2, 5, 42], @enigma.calculate_shift("90037", "130385")
+  end
+
+  def test_it_encodes_message
+    encryption = @enigma.encrypt("ABCD", "01234", "101183")
+
+    assert_equal "krgt", encryption[:encryption]
   end
 
   def test_encryption_key_and_date_given
@@ -39,10 +93,9 @@ class EnigmaTest < Minitest::Test
     assert_equal expected2, @enigma2.encrypt("whatever!", "88888", "101183")
   end
 
-  def test_encrytion_random_key_stored
-    enigma1 = Enigma.new
-    encryption1 = enigma1.encrypt("whatever")
-    encryption2 = enigma1.encrypt("whatever")
+  def test_encryption_no_key_or_date_given
+    encryption1 = @enigma.encrypt("whatever")
+    encryption2 = @enigma2.encrypt("whatever")
 
     assert_equal 5, encryption1[:key].length
     assert_equal "060119", encryption1[:date]
@@ -52,53 +105,50 @@ class EnigmaTest < Minitest::Test
   end
 
   def test_encryption_current_date_stored
-    enigma1 = Enigma.new
-    encoded1 = enigma1.encrypt("whatever", "12345")
-    encoded2 = enigma1.encrypt("whatever", "67890")
+    encoded1 = @enigma.encrypt("whatever", "12345")
+    encoded2 = @enigma.encrypt("whatever", "67890")
 
     assert_equal "060119", encoded1[:date]
     assert_equal "060119", encoded2[:date]
-  end
-
-  def test_encryption_no_key_or_date_given
-    encryption1 = Encryption.new
-    encoded1 = encryption1.encrypt("whatever")
-    encoded2 = encryption1.encrypt("whatever")
-
-    assert_equal 5, encoded1[:key].length
-    assert_equal "060119", encoded1[:date]
-    assert_equal 5, encoded2[:key].length
-    assert_equal "060119", encoded2[:date]
-    assert_equal false, encoded1[:key] == encoded2[:key]
   end
 
   def test_decryption_key_and_date_given
-    enigma1 = Enigma.new
+    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "101183" }
-    assert_equal expected, enigma1.decrypt("lspiuftg", "88888", "101183")
+    assert_equal expected, @enigma.decrypt("lspiuftg", "88888", "101183")
   end
 
   def test_decryption_no_date_given
+    skip
     expected =  { :decryption => "whatever",
                   :key => "88888",
                   :date => "060119" }
     assert_equal expected, @enigma.decrypt("gpnapcrz", "88888")
   end
 
-  def test_crack_module
-    assert_equal "THIS MODULE WORKS!", @enigma.cracktest
-  end
-
   def test_it_finds_correct_date_rotation
-    @enigma.decrypt("abcde", "00000", "101183")
-    @enigma2.decrypt("abcdefghij", "00000", "101183")
-
-    assert_equal ["4", "8", "9", "9"], @enigma.decryption.find_date_rotation("abcde")
-    assert_equal ["8", "9", "9", "4"], @enigma2.decryption.find_date_rotation("abcdefghij")
+    assert_equal ["4", "8", "9", "9"], @enigma.find_date_rotation("abcde", "101183")
+    assert_equal ["8", "9", "9", "4"], @enigma2.find_date_rotation("abcdefghij", "101183")
   end
 
+  def test_it_decodes_cyphertext
+    decryption1 = @enigma.decrypt("krgt", "01234", "101183")
+    decryption2 = @enigma.decrypt("lspiuftg", "88888", "101183")
+    decryption3 = @enigma.decrypt("@cgx0wt!", "88888", "101183")
+
+    assert_equal "abcd", decryption1[:decryption]
+    assert_equal "whatever", decryption2[:decryption]
+    assert_equal "@ssh0le!", decryption3[:decryption]
+  end
+
+  def test_it_creates_alternative_shift
+  end
+
+  def test_it_cracks_keys
+    assert_equal "49841", @enigma.calculate_key_chars("zwws", "060119")
+  end
 
 
 end

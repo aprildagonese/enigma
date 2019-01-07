@@ -1,24 +1,15 @@
-require './lib/enigma'
-require './lib/crack'
+module Decryption
 
-class Decryption < Enigma
-  attr_reader :ciphertext
-
-  def decrypt(message, key, date)
+  def decrypt_package(message, key, date)
     @ciphertext = message
-    set_up_enigma(key, date)
-    @decrypted = { :decryption => generate_decryption(message),
-                   :key => @key_object.key_string,
-                   :date => @dateid_object.date_string }
-  end
-
-  def generate_decryption(message)
-    calculate_shift
-    decode_ciphertext(message)
+    @decrypted = { :decryption => decode_ciphertext(message),
+                   :key => @key_string,
+                   :date => @date_string }
   end
 
 
   def decode_ciphertext(message)
+    @alphabet = (("a".."z").to_a << " ")
     new_chars = []
     message.downcase.split("").each do |char|
       if @alphabet.include?(char)
