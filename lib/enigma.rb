@@ -4,8 +4,6 @@ require './lib/encryption'
 require './lib/decryption'
 
 #add mocks and stubs
-#add class method
-#refactor decrypt w/splat
 #lines per method? chars per line?
 
 class Enigma
