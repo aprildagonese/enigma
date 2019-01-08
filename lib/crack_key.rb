@@ -11,14 +11,16 @@ module Crack
   def crack_key(message, date)
     key_strings = ("00000".."99999").to_a
     correct_key = find_key(key_strings, message, date)
+    correct_key
   end
 
   def find_key(key_strings, message, date)
-    key_strings.find do |key|
+    correct_key = key_strings.find do |key|
       shift = calculate_shift(key, date)
       rotated_shift = shift.rotate(message.length % 4)
       decode_ciphertext(message[-4..-1], rotated_shift) == " end"
     end
+    correct_key
   end
 
 end

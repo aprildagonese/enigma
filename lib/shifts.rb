@@ -2,7 +2,7 @@ module Shifts
 
   def calculate_shift(key, date_string)
     dates = date_offsets(date_string)
-
+    
     key_shifts(key).map do |key, value|
       value.to_i + dates[key].to_i
     end
