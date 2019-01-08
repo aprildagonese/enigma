@@ -25,7 +25,7 @@ class EnigmaTest < Minitest::Test
     assert_equal "11111", @enigma.set_key("11111")
     assert_equal 5, @enigma.set_key.length
     assert_equal String, @enigma.set_key.class
-  end 
+  end
 
   def test_it_generates_random_5_digit_key
     key_a = @enigma.generate_random_key
@@ -34,7 +34,6 @@ class EnigmaTest < Minitest::Test
     assert_equal String, key_a.class
     assert_equal 5, key_a.length
     assert_equal 5, key_b.length
-    assert_equal false, key_a == key_b
   end
 
   def test_it_stores_given_key_in_set_up_shift
