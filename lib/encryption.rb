@@ -1,9 +1,9 @@
 module Encryption
 
   def encrypt_package(message)
-    encrypted = { :encryption => encode_message(message),
-                  :key => @key_string,
-                  :date => @date_string }
+    { :encryption => encode_message(message),
+      :key => @key_string,
+      :date => @date_string }
   end
 
   def encode_message(message)

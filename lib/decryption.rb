@@ -1,9 +1,9 @@
 module Decryption
 
   def decrypt_package(message, key, date)
-    @decrypted = { :decryption => decode_ciphertext(message, @shift),
-                   :key => @key_string,
-                   :date => @date_string }
+    { :decryption => decode_ciphertext(message, @shift),
+      :key => @key_string,
+      :date => @date_string }
   end
 
   def decode_ciphertext(message, shift)

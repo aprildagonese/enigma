@@ -6,6 +6,7 @@ require './lib/encryption'
 require './lib/decryption'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'pry'
 
 class EnigmaTest < Minitest::Test
 
@@ -20,9 +21,10 @@ class EnigmaTest < Minitest::Test
     assert_instance_of Enigma, @enigma
   end
 
-  def test_it_sets_given_key
-    @enigma.set_up_shift("01234")
-    assert_equal "01234", @enigma.key_string
+  def test_it_sets_key
+    assert_equal "11111", @enigma.set_key("11111")
+    assert_equal 5, @enigma.set_key.length
+    assert_equal String, @enigma.set_key.class
   end
 
   def test_it_generates_random_5_digit_key
@@ -32,7 +34,17 @@ class EnigmaTest < Minitest::Test
     assert_equal String, key_a.class
     assert_equal 5, key_a.length
     assert_equal 5, key_b.length
-    assert_equal false, key_a == key_b
+  end
+
+  def test_it_stores_given_key_in_set_up_shift
+    @enigma.set_up_shift("01234")
+    assert_equal "01234", @enigma.key_string
+  end
+
+  def test_it_stores_random_key_in_set_up_shift
+    @enigma.set_up_shift
+    assert_equal 5, @enigma.key_string.length
+    assert_equal String, @enigma.key_string.class
   end
 
   def test_it_splits_key_into_key_shifts
@@ -44,13 +56,22 @@ class EnigmaTest < Minitest::Test
     assert_equal expected, @enigma.key_shifts("01234")
   end
 
-  def test_it_sets_given_date
+  def test_it_generates_todays_date
+    assert_equal "080119", @enigma.generate_todays_date
+  end
+
+  def test_it_sets_date
+    assert_equal "080119", @enigma.set_date
+    assert_equal "101183", @enigma.set_date("101183")
+  end
+
+  def test_it_sets_up_enigma_no_date_given
     @enigma.set_up_enigma("011118")
 
     assert_equal "011118", @enigma.date_string
   end
 
-  def test_it_generates_todays_date
+  def test_it_sets_up_enigma_no_date_given
     @enigma.set_up_enigma
 
     assert_equal String, @enigma.date_string.class
@@ -77,10 +98,29 @@ class EnigmaTest < Minitest::Test
     assert_equal [98, 2, 5, 42], @enigma.calculate_shift("90037", "130385")
   end
 
+  def test_it_finds_encode_chars
+    @enigma.set_up_enigma("080119")
+    @enigma.set_up_shift("11111")
+
+    assert_equal "m", @enigma.find_encode_char("a", 5)
+    assert_equal "!", @enigma.find_encode_char("!", 10)
+  end
+
   def test_it_encodes_message
     encryption = @enigma.encrypt("ABCD", "01234", "101183")
 
     assert_equal "krgt", encryption[:encryption]
+  end
+
+  def test_it_encrypts_package
+    @enigma.set_up_enigma("101183")
+    @enigma.set_up_shift("11111")
+
+    expected =  { :encryption => "aphibbxll",
+                  :key => "11111",
+                  :date => "101183" }
+
+    assert_equal expected, @enigma.encrypt_package("happiness")
   end
 
   def test_encryption_key_and_date_given
@@ -99,9 +139,9 @@ class EnigmaTest < Minitest::Test
     encryption2 = @enigma2.encrypt("whatever")
 
     assert_equal 5, encryption1[:key].length
-    assert_equal "070119", encryption1[:date]
+    assert_equal "080119", encryption1[:date]
     assert_equal 5, encryption2[:key].length
-    assert_equal "070119", encryption2[:date]
+    assert_equal "080119", encryption2[:date]
     assert_equal false, encryption1[:key] == encryption2[:key]
   end
 
@@ -109,8 +149,8 @@ class EnigmaTest < Minitest::Test
     encoded1 = @enigma.encrypt("whatever", "12345")
     encoded2 = @enigma.encrypt("whatever", "67890")
 
-    assert_equal "070119", encoded1[:date]
-    assert_equal "070119", encoded2[:date]
+    assert_equal "080119", encoded1[:date]
+    assert_equal "080119", encoded2[:date]
   end
 
   def test_decryption_key_and_date_given
@@ -130,8 +170,17 @@ class EnigmaTest < Minitest::Test
   def test_decryption_no_date_given
     expected =  { :decryption => "whatever",
                   :key => "88888",
-                  :date => "070119" }
+                  :date => "080119" }
     assert_equal expected, @enigma.decrypt("gpnapcrz", "88888")
+  end
+
+  def test_it_finds_decode_chars
+    @enigma.set_up_enigma("080119")
+    @enigma.set_up_shift("11111")
+    shift = [15, 12, 17, 12]
+
+    assert_equal "a", @enigma.find_decode_char("m", 5, shift)
+    assert_equal "!", @enigma.find_decode_char("!", 10, shift)
   end
 
   def test_it_decodes_cyphertext
@@ -144,9 +193,20 @@ class EnigmaTest < Minitest::Test
     assert_equal "@ssh0le!", decryption3[:decryption]
   end
 
+  def test_it_decrypts_package
+    @enigma.set_up_enigma("101183")
+    @enigma.set_up_shift("11111")
+
+    expected =  { :decryption => "happiness",
+                  :key => "11111",
+                  :date => "101183" }
+
+    assert_equal expected, @enigma.decrypt_package("aphibbxll", "11111", "101183")
+  end
+
   def test_it_cracks_keys
-    @enigma.set_up_enigma("070119")
-    assert_equal "49841", @enigma.crack_key("zwws", "070119")
+    @enigma.set_up_enigma("080119")
+    assert_equal "49841", @enigma.crack_key("zwws", "080119")
 
     @enigma.set_up_enigma("101183")
     assert_equal "12345", @enigma.crack_key("uebd", "101183")

@@ -3,9 +3,10 @@ module Crack
   def crack_package(message, date)
     @key_string = crack_key(message, date)
     @shift = calculate_shift(@key_string, date)
-    @decrypted = {  :decryption => decode_ciphertext(message, @shift),
-                    :key => @key_string,
-                    :date => @date_string }
+
+    {  :decryption => decode_ciphertext(message, @shift),
+       :key => @key_string,
+       :date => @date_string }
   end
 
   def crack_key(message, date)
