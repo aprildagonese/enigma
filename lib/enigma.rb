@@ -4,7 +4,6 @@ require './lib/encryption'
 require './lib/decryption'
 
 #add mocks and stubs
-#lines per method? chars per line?
 
 class Enigma
   include Shifts, Encryption, Decryption, Crack

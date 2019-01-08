@@ -1,9 +1,4 @@
 require './lib/enigma'
-require './lib/decryption'
-require './lib/key'
-require './lib/date'
-require './lib/crack'
-require 'pry'
 
 args = ARGV
 ciphertext_file = args[0]

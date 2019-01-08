@@ -1,9 +1,4 @@
 require './lib/enigma'
-require './lib/encryption'
-require './lib/key'
-require './lib/date'
-require './lib/crack'
-require 'pry'
 
 files = ARGV
 message_name = files.first
