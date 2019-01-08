@@ -3,8 +3,6 @@ require './lib/crack_key'
 require './lib/encryption'
 require './lib/decryption'
 
-#add mocks and stubs
-
 class Enigma
   include Shifts, Encryption, Decryption, Crack
 

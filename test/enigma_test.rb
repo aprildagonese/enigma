@@ -6,7 +6,6 @@ require './lib/encryption'
 require './lib/decryption'
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'pry'
 
 class EnigmaTest < Minitest::Test
 
